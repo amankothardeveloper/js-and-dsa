@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Today Study Notes</h1>
+    <ul>
+        <li>Promise resolution is synchronous</li>
+        <li>Promise reaction (then/catch/finally) is asynchronous</li>
+    </ul>
+
+    <div>
+        Case 2️⃣: return a Promise
+        Promise.resolve()
+        .then(() => Promise.resolve(10))
+        .then(v => console.log(v));
+
+
+        ✔ outer chain waits
+        ✔ promise is unwrappeds
+
+        📌 This is called promise flattening
+
+    </div>
+
+
+    <HR>
+    </HR>
+
+
+    <h2>Promise Mechanics – Core Rules (Phase 1)</h2>
+
+    <ul>
+        <li>
+            <strong>Promise constructor runs synchronously</strong><br />
+            The executor function inside <code>new Promise()</code> runs immediately,
+            not asynchronously.
+        </li>
+
+        <li>
+            <strong><code>.then()</code>, <code>.catch()</code>, <code>.finally()</code> callbacks are always
+                asynchronous</strong><br />
+            They are placed in the <em>microtask queue</em>, even if the promise is already resolved.
+        </li>
+
+        <li>
+            <strong><code>.then()</code> return rules control the chain</strong>
+            <ul>
+                <li>Returning a value → next <code>.then()</code> receives it</li>
+                <li>Returning a promise → chain waits and unwraps it</li>
+                <li>Throwing an error → converts to a rejected promise</li>
+            </ul>
+        </li>
+
+        <li>
+            <strong>Errors bubble down the promise chain</strong><br />
+            Once a promise is rejected, all following <code>.then()</code> calls are skipped
+            until a <code>.catch()</code> is found.
+        </li>
+
+        <li>
+            <strong><code>.catch()</code> is equivalent to <code>.then(undefined, onRejected)</code></strong><br />
+            It only catches errors from <em>previous</em> promises, not future ones.
+            Placement matters.
+        </li>
+
+        <li>
+            <strong><code>.finally()</code> is for cleanup only</strong>
+            <ul>
+                <li>Receives no value or error</li>
+                <li>Cannot modify the resolved value</li>
+                <li>Runs on both resolve and reject</li>
+                <li>Only throwing inside <code>finally()</code> affects the chain</li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <script src="./JS/async-js/08-then-return-rules.js"></script>
+</body>
+
+</html>
+
+
+🔹 Predict the Output (Core)
+console.log("A");
+
+new Promise((resolve) => {
+  console.log("B");
+  resolve("C");
+}).then(console.log);
+
+console.log("D");
+<!-- --------------------------------------------- -->
+Promise.resolve("X")
+  .then(v => {
+    return v + "Y";
+  })
+  .then(v => {
+    throw v + "Z";
+  })
+  .catch(e => console.log(e));
+<!-- ---------------------------------------------------------------- -->
+Promise.reject("Error")
+  .then(() => console.log("A"))
+  .catch(() => {
+    console.log("B");
+    return "Recovered";
+  })
+  .then(v => console.log(v));
+<!-- -------------------------------------------------------------- -->
+🔹 Error Bubbling & .catch() Placement
+Promise.resolve()
+  .then(() => {
+    throw "Boom";
+  })
+  .catch(e => {
+    console.log("Caught:", e);
+  })
+  .then(() => {
+    throw "Again";
+  });
+
+<!-- ------------------------------------------------------------------ -->
+👉 What happens and why?
+
+What will happen if a promise chain throws an error after the only .catch()?
+
+<!--    -------------------------------------------------------------- -->
+
+🔹 .finally() Traps
+Promise.resolve("A")
+  .finally(() => {
+    return "B";
+  })
+  .then(v => console.log(v));
+<!-- ----------------------------------------------------------------- -->
+Promise.reject("X")
+  .finally(() => {
+    console.log("Cleanup");
+  })
+  .catch(e => console.log(e));
+<!-- ----------------------------------------------------------------- -->
+
+Under what condition can .finally() actually change the promise chain?
+<!-- ----------------------------------------------------------------- -->
+
+🔹 Deep Understanding (Explain in Your Own Words)
+
+Explain this statement:
+
+“Returning a promise inside .then() pauses the chain.”
+<!-- ----------------------------------------------------------------- -->
+
+Why is .catch() internally just .then(undefined, onRejected)?
+<!-- ----------------------------------------------------------------- -->
+Why does .then() skip execution after a rejection?
+<!-- ----------------------------------------------------------------- -->
+
+🔥 Challenge Question (Very Important)
+Promise.resolve()
+  .then(() => {
+    return Promise.reject("Fail");
+  })
+  .catch(() => {
+    return Promise.resolve("Recovered");
+  })
+  .then(v => {
+    console.log(v);
+  });
+
+
+What is the output?
+
+Which rule fixed the chain?
+
+Why does execution continue?
+<!-- ----------------------------------------------------------------- -->
+
