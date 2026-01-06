@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Promise Methods Practice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    pre {
+      background: #212529;
+      color: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">JavaScript Promise Methods – Practice</h2>
+
+  <!-- Q1 -->
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Q1 – Promise.resolve</div>
+    <div class="card-body">
+      <pre>
+Promise.resolve(Promise.resolve("DONE"))
+  .then(res => console.log(res));
+      </pre>
+      <p class="text-muted">👉 Question: What will be printed and why?</p>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Q2 – Promise.reject</div>
+    <div class="card-body">
+      <pre>
+Promise.reject("ERROR")
+  .then(() => console.log("A"))
+  .catch(err => console.log(err));
+      </pre>
+      <p class="text-muted">👉 Question: Will "A" print? What is the output?</p>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Q3 – Promise.all</div>
+    <div class="card-body">
+      <pre>
+Promise.all([
+  Promise.resolve("A"),
+  Promise.reject("B"),
+  Promise.resolve("C")
+])
+.then(res => console.log(res))
+.catch(err => console.log(err));
+      </pre>
+      <p class="text-muted">👉 Question: What will be printed? Why?</p>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Q4 – Promise.allSettled</div>
+    <div class="card-body">
+      <pre>
+Promise.allSettled([
+  Promise.resolve("A"),
+  Promise.reject("B")
+])
+.then(res => console.log(res));
+      </pre>
+      <p class="text-muted">
+        👉 Question: How many items are in the result? What does each item contain?
+      </p>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Q5 – Promise.race</div>
+    <div class="card-body">
+      <pre>
+Promise.race([
+  new Promise(res => setTimeout(() => res("A"), 100)),
+  new Promise(res => setTimeout(() => res("B"), 50))
+])
+.then(res => console.log(res));
+      </pre>
+      <p class="text-muted">👉 Question: What will be printed and why?</p>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="card mb-4">
+    <div class="card-header fw-bold">Q6 – Promise.any</div>
+    <div class="card-body">
+      <pre>
+Promise.any([
+  Promise.reject("X"),
+  Promise.resolve("Y"),
+  Promise.resolve("Z")
+])
+.then(res => console.log(res))
+.catch(err => console.log(err));
+      </pre>
+      <p class="text-muted">
+        👉 Question: What will be printed? Why is "X" ignored?
+      </p>
+    </div>
+  </div>
+
+</div>
+
+    <script src="./JS/async-js/08-then-return-rules.js"></script>
+</body>
+
+</html>
